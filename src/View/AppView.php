@@ -14,17 +14,18 @@
 namespace App\View;
 
 use Cake\View\View;
+use FrankFoerster\Filter\View\Helper\FilterHelper;
 
 /**
  * Application View
  *
  * Your application’s default view class
  *
+ * @property FilterHelper Filter
  * @link http://book.cakephp.org/3.0/en/views.html#the-app-view
  */
 class AppView extends View
 {
-
     /**
      * Initialization hook method.
      *
@@ -36,5 +37,10 @@ class AppView extends View
      */
     public function initialize()
     {
+        parent::initialize();
+
+        $this->loadHelper('Filter', [
+            'className' => 'FrankFoerster/Filter.Filter'
+        ]);
     }
 }
