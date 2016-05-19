@@ -1,7 +1,7 @@
 {
-  "name": "your-username/your-app",
-  "description": "The app description",
-  "homepage": "http://github.com/your-username/your-app",
+  "name": "frankfoerster/cakephp-app-template",
+  "description": "A customized app skeleton for new CakePHP 3.x projects.",
+  "homepage": "https://github.com/frankfoerster/cakephp-app-template",
   "type": "project",
   "require": {
     "php": ">=7.0.0",
