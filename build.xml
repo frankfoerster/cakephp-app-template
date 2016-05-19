@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Phing build config file.
+    @link http://www.phing.info/
+-->
+<project name="your-username/your-app" default="build">
+    <!-- Properties -->
+    <property name="basedir" value="${phing.dir}"/>
+    <property name="appdir"  value="."/>
+    <property name="logdir"  value="${basedir}/.build/logs"/>
+    <property name="coveragedir" value="${basedir}/.build/coverage"/>
+    <property name="vendorbin" value="${basedir}/vendor/bin"/>
+    <property name="phpcsIgnore" value="Assets/*,node_modules"/>
+
+    <!-- ============================================  -->
+    <!-- Target: clean                                 -->
+    <!-- ============================================  -->
+    <target name="clean" description="Cleanup build artifacts">
+        <echo msg="Cleanup build artifacts"/>
+        <delete dir="${logdir}"/>
+        <delete dir="${coveragedir}"/>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare" depends="clean" description="Prepare for build">
+        <echo msg="Creating build directories"/>
+        <mkdir dir="${logdir}"/>
+        <mkdir dir="${coveragedir}"/>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: composer                              -->
+    <!-- ============================================  -->
+    <target name="composer" description="Installing composer dependencies">
+        <echo msg="Installing composer dependencies"/>
+        <exec executable="composer">
+            <arg line="install"/>
+            <arg line="--no-progress"/>
+            <arg line="--no-interaction"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpmd-local                           -->
+    <!-- ============================================  -->
+    <target name="phpmd-local" description="Perform project mess detection using PHPMD and print human readable output.">
+        <exec executable="${vendorbin}/phpmd" output="${logdir}/phpmd.log">
+            <arg line="${appdir}/src"/>
+            <arg line="text"/>
+            <arg line="${appdir}/phpmd-rule.xml"/>
+            <arg line="--suffixes php,ctp" />
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpmd                                 -->
+    <!-- ============================================  -->
+    <target name="phpmd" description="Perform project mess detection using PHPMD">
+        <exec executable="${vendorbin}/phpmd" output="${logdir}/phpmd.log">
+            <arg line="${appdir}/src"/>
+            <arg line="xml"/>
+            <arg line="${appdir}/phpmd-rule.xml"/>
+            <arg line="--reportfile"/>
+            <arg line="${logdir}/phpmd.xml"/>
+            <arg line="--suffixes php,ctp"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpcs-local                           -->
+    <!-- ============================================  -->
+    <target name="phpcs-local" description="Find coding standard violations using PHP_CodeSniffer and print human readable output.">
+        <exec executable="${vendorbin}/phpcs" output="${logdir}/phpcs.log">
+            <arg line="${appdir}/src"/>
+            <arg line="--standard=${appdir}/vendor/cakephp/cakephp-codesniffer/CakePHP"/>
+            <arg line="--ignore=${phpcsIgnore}"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpcs                                 -->
+    <!-- ============================================  -->
+    <target name="phpcs" description="Find coding standard violations using PHP_CodeSniffer.">
+        <exec executable="${vendorbin}/phpcs" output="${logdir}/phpcs.log">
+            <arg line="${appdir}/src"/>
+            <arg line="--standard=${appdir}/vendor/cakephp/cakephp-codesniffer/CakePHP"/>
+            <arg line="--report=checkstyle"/>
+            <arg line="--report-file=${logdir}/phpcs.xml"/>
+            <arg line="--ignore=${phpcsIgnore}"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpcpd-local                          -->
+    <!-- ============================================  -->
+    <target name="phpcpd-local" description="Perform copy/paste detection using phpcpd">
+        <exec dir="${basedir}" executable="${vendorbin}/phpcpd" output="${logdir}/phpcpd.log">
+            <arg line="${appdir}/src"/>
+            <arg line="--names *.php,*.ctp"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpcpd                                -->
+    <!-- ============================================  -->
+    <target name="phpcpd" description="Perform copy/paste detection using phpcpd">
+        <exec dir="${basedir}" executable="${vendorbin}/phpcpd" output="${logdir}/phpcpd.log">
+            <arg line="${appdir}/src"/>
+            <arg line="--names *.php,*.ctp"/>
+            <arg line="--log-pmd ${logdir}/phpcpd.xml"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpunit-local                         -->
+    <!-- ============================================  -->
+    <target name="phpunit-local" description="Perform Unit Tests for sms/pflegenetz">
+        <exec dir="${basedir}" executable="${vendorbin}/phpunit" output="${logdir}/phpunit.log">
+            <arg line="--configuration=${appdir}/phpunit.xml.dist"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpunit                               -->
+    <!-- ============================================  -->
+    <target name="phpunit" description="Perform Unit Tests for sms/pflegenetz">
+        <exec dir="${basedir}" executable="${vendorbin}/phpunit" output="${logdir}/phpunit.log">
+            <arg line="--configuration=${appdir}/phpunit.xml.dist"/>
+            <arg line="--log-junit=${logdir}/phpunit.xml"/>
+            <arg line="--coverage-clover=${logdir}/clover.xml"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: migrate                               -->
+    <!-- ============================================  -->
+    <target name="migrate" description="Perform DB migrations">
+        <exec dir="${basedir}" executable="${basedir}/migrate.sh" output="${logdir}/migration.log"/>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: pdepend                               -->
+    <!-- ============================================  -->
+    <target name="pdepend" description="Calculate software metrics using PHP_Depend and log result in XML format.">
+        <exec dir="${basedir}" executable="${vendorbin}/pdepend">
+            <arg value="--jdepend-xml=${logdir}/pdepend.xml"/>
+            <arg value="--jdepend-chart=${logdir}/dependencies.svg"/>
+            <arg value="--overview-pyramid=${logdir}/overview-pyramid.svg"/>
+            <arg path="${basedir}/src"/>
+        </exec>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: build-local (cmd/shell)               -->
+    <!-- ============================================  -->
+    <target name="build-local" depends="clean,prepare,composer,phpmd-local,phpcs-local,phpcpd-local,phpunit-local"/>
+
+    <!-- ============================================  -->
+    <!-- Target: build                                 -->
+    <!-- ============================================  -->
+    <target name="build" depends="clean,prepare,composer,phpmd,phpcs,phpcpd,phpunit"/>
+
+    <!-- ============================================  -->
+    <!-- Target: jenkins                               -->
+    <!-- ============================================  -->
+    <target name="jenkins" depends="clean,prepare,composer,pdepend,phpmd,phpcs,phpcpd,migrate,phpunit"/>
+
+</project>
