@@ -38,6 +38,7 @@ class Installer
         $rootDir = dirname(dirname(__DIR__));
 
         static::createAppConfig($rootDir, $io);
+        static::createLocalEnvironmentConfig($rootDir, $io);
         static::createWritableDirectories($rootDir, $io);
 
         // ask if the permissions should be changed
@@ -83,6 +84,23 @@ class Installer
         if (!file_exists($appConfig)) {
             copy($defaultConfig, $appConfig);
             $io->write('Created `config/app.php` file');
+        }
+    }
+
+    /**
+     * Create the config/Environment/environment.local.php file if it does not exist.
+     *
+     * @param string $dir The application's root directory.
+     * @param \Composer\IO\IOInterface $io IO interface to write to console.
+     * @return void
+     */
+    public static function createLocalEnvironmentConfig($dir, $io)
+    {
+        $appConfig = $dir . '/config/Environment/environment.local.php';
+        $defaultConfig = $dir . '/config/Environment/environment.local.php.default';
+        if (!file_exists($appConfig)) {
+            copy($defaultConfig, $appConfig);
+            $io->write('Created `config/Environment/environment.local.php` file');
         }
     }
 
