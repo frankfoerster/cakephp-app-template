@@ -3,6 +3,7 @@
   "description": "A customized app skeleton for new CakePHP 3.x projects.",
   "homepage": "https://github.com/frankfoerster/cakephp-app-template",
   "type": "project",
+  "license": "MIT",
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
