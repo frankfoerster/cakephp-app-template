@@ -6,5 +6,5 @@ node_modules
 /tmp/*
 /logs/*
 /src/Assets/js/vendor/*
-#/config/Environment/environment.local.php
+/config/Environment/environment.local.php
 #/docs/build/*
