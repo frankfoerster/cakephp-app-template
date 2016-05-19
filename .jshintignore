@@ -1,2 +1,2 @@
 src/Assets/js/vendor/**/*.js
-src/Assets/js/manual_vendor/**/*.js
+src/Assets/js/vendor_custom/**/*.js

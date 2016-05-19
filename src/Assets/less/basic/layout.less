@@ -1,0 +1,59 @@
+@import (reference) "../__config";
+@import (reference) "../__mixins";
+
+*, *:before, *:after {
+  .box-sizing(border-box);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font: @font-size~'/'@line-height @font-family;
+  color: @font-color;
+  background-color: @body-bg-color;
+}
+
+nav {
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+a {
+  color: @link-color;
+  text-decoration: none;
+
+  &:hover {
+    color: @link-color--hover;
+  }
+}
+
+b, strong {
+  font-weight: @font-weight-bold;
+}
+
+.center {
+  text-align: center;
+}
+
+.valign-middle {
+  vertical-align: middle;
+}
+
+.hidden {
+  display: none;
+}
+
+.visuallyhidden {
+  .visuallyhidden();
+}
+
+#wrapper {
+  width: 100%;
+  min-height: 100%;
+}
