@@ -6,7 +6,7 @@ require.config({
   },
   paths: {
     backbone: '../vendor/backbone/backbone',
-    marionette: '../vendor/marionette/lib/backbone.marionette',
+    marionette: '../vendor/backbone.marionette/lib/backbone.marionette',
     jquery: '../vendor/jquery/dist/jquery',
     underscore: '../vendor/underscore/underscore'
   },

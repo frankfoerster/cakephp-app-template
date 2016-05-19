@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           sourceMapURL: 'app.css.map'
         },
         files: {
-          'src/Assets/_build/css/app.css': 'src/Assets/less/frontend/app.less'
+          '.build/Assets/css/app.css': 'src/Assets/less/app.less'
         }
       }
     },
@@ -25,7 +25,7 @@ module.exports = function(grunt) {
       },
       default: {
         files: {
-          'src/Assets/_build/css/app.min.css': 'src/Assets/_build/css/app.css'
+          '.build/Assets/css/app.min.css': '.build/Assets/css/app.css'
         }
       }
     },
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
           // Define our build directory. All files in the base URL will be
           // COPIED OVER into the build directory as part of the
           // concatentation and optimization process.
-          dir: 'src/Assets/_build/js/src/',
+          dir: '.build/Assets/js/',
 
           // Load the RequireJS config() definition from the config.js file.
           // Otherwise, we'd have to redefine all of our paths again here.
@@ -56,6 +56,13 @@ module.exports = function(grunt) {
           findNestedDependencies: true,
 
           fileExclusionRegExp: /^\.|\.md$|^LICENSE$|\.json$|^src$|\.map$|^demo$|^test$|^tests$|\.TXT$|\.txt$|^fonts$|^css$|\.css$|^less$|\.less$|^grunt$|\.sh$|^r.js$/,
+
+          // Define the modules to compile.
+          modules: [
+            {
+              name: 'main'
+            }
+          ],
 
           // Minify all js files via uglify2 and set DEBUG to false during the build.
           // This way you can use statements like:
@@ -78,15 +85,15 @@ module.exports = function(grunt) {
     copy: {
       js: {
         files: [
-          {src: 'src/Assets/_build/js/app/app.js', dest: 'webroot/js/app.js'},
-          {src: 'src/Assets/js/vendor/requirejs/require.js', dest: 'webroot/js/require.js'}
+          {src: '.build/Assets/js/main.js', dest: 'webroot/js/app.js'},
+          {src: '.build/Assets/js/vendor/requirejs/require.js', dest: 'webroot/js/require.js'}
         ]
       },
       css: {
         files: [
-          {src: 'src/Assets/_build/css/app.min.css', dest: 'webroot/css/app.min.css'},
-          {src: 'src/Assets/_build/css/app.css', dest: 'webroot/css/app.css'},
-          {src: 'src/Assets/_build/css/app.css.map', dest: 'webroot/css/app.css.map'}
+          {src: '.build/Assets/css/app.min.css', dest: 'webroot/css/app.min.css'},
+          {src: '.build/Assets/css/app.css', dest: 'webroot/css/app.css'},
+          {src: '.build/Assets/css/app.css.map', dest: 'webroot/css/app.css.map'}
         ]
       }
     },
