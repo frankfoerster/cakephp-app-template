@@ -1,11 +1,10 @@
-.build
+.build/*
 .idea
 node_modules
 /vendor/*
 /config/app.php
 /tmp/*
 /logs/*
-#/src/Assets/_build/*
-#/src/Assets/js/vendor/*
+/src/Assets/js/vendor/*
 #/config/Environment/environment.local.php
 #/docs/build/*
