@@ -24,31 +24,37 @@ require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
-use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
 use Cake\Database\Type;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
+use Cake\Filesystem\Folder;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Network\Request;
 use Cake\Routing\DispatcherFactory;
-use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use FrankFoerster\Environment\Environments;
 
 /**
  * Read configuration file and inject configuration into various
  * CakePHP classes.
- *
- * By default there is only one configuration file. It is often a good
- * idea to create multiple configuration files, and separate the configuration
- * that changes from configuration that does not. This makes deployment simpler.
  */
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
+
+    Plugin::load('FrankFoerster/Environment');
+    Environments::init();
+
+    foreach (Configure::consume('Cache') as $key => $config) {
+        new Folder($config['path'], true, 0775);
+        Cache::config($key, $config);
+    }
+
+    unset($key, $config);
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
@@ -114,7 +120,6 @@ if (!Configure::read('App.fullBaseUrl')) {
     unset($httpHost, $s);
 }
 
-Cache::config(Configure::consume('Cache'));
 ConnectionManager::config(Configure::consume('Datasources'));
 Email::configTransport(Configure::consume('EmailTransport'));
 Email::config(Configure::consume('Email'));
@@ -124,11 +129,11 @@ Security::salt(Configure::consume('Security.salt'));
 /**
  * Setup detectors for mobile and tablet.
  */
-Request::addDetector('mobile', function ($request) {
+Request::addDetector('mobile', function () {
     $detector = new \Detection\MobileDetect();
     return $detector->isMobile();
 });
-Request::addDetector('tablet', function ($request) {
+Request::addDetector('tablet', function () {
     $detector = new \Detection\MobileDetect();
     return $detector->isTablet();
 });
@@ -154,6 +159,7 @@ Request::addDetector('tablet', function ($request) {
  *
  */
 Plugin::load('Migrations');
+Plugin::load('FrankFoerster/Filter');
 
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
@@ -177,8 +183,11 @@ DispatcherFactory::add('ControllerFactory');
  * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
  */
 Type::build('time')
-    ->useImmutable();
+    ->useImmutable()
+    ->useLocaleParser();
 Type::build('date')
-    ->useImmutable();
+    ->useImmutable()
+    ->useLocaleParser();
 Type::build('datetime')
-    ->useImmutable();
+    ->useImmutable()
+    ->useLocaleParser();
