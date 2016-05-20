@@ -60,7 +60,7 @@ module.exports = function(grunt) {
           // Define the modules to compile.
           modules: [
             {
-              name: 'main'
+              name: 'app'
             }
           ],
 
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
           //      if (DEBUG) {
           //        console.log('foobar')
           //      }
-          // during development (Configure::write('debug', 2))
+          // during development (Configure::write('debug', true))
           // which will be excluded from the build.
           optimize: 'uglify2',
           uglify2: {
@@ -82,11 +82,26 @@ module.exports = function(grunt) {
         }
       }
     },
+    uglify: {
+      requirejs: {
+        files: [
+          {src: 'src/Assets/js/vendor/requirejs/require.js', dest: '.build/Assets/js/require.js'}
+        ]
+      }
+    },
+    concat: {
+      options: {
+        separator: ';'
+      },
+      js: {
+        src: ['.build/Assets/js/require.js', '.build/Assets/js/app.js'],
+        dest: '.build/Assets/js/build.js'
+      }
+    },
     copy: {
       js: {
         files: [
-          {src: '.build/Assets/js/main.js', dest: 'webroot/js/app.js'},
-          {src: '.build/Assets/js/vendor/requirejs/require.js', dest: 'webroot/js/require.js'}
+          {src: '.build/Assets/js/build.js', dest: 'webroot/js/app.js'}
         ]
       },
       css: {
@@ -114,6 +129,8 @@ module.exports = function(grunt) {
     'cssmin',
     'jshint',
     'requirejs:app',
+    'uglify:requirejs',
+    'concat:js',
     'copy:js',
     'copy:css'
   ]);
