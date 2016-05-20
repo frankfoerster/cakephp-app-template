@@ -14,7 +14,8 @@
     "cakephp/migrations": "1.5.*",
     "cakephp/plugin-installer": "*",
     "frankfoerster/cakephp-environment": "^3.0",
-    "frankfoerster/cakephp-filter": "dev-cake3"
+    "frankfoerster/cakephp-filter": "dev-cake3",
+    "frankfoerster/cakephp-asset": "3.0.*"
   },
   "require-dev": {
     "psy/psysh": "@stable",
