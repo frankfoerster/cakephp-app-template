@@ -1,0 +1,72 @@
+@import (reference) "../__config";
+@import (reference) "../__mixins";
+
+.flash-message  {
+  position: relative;
+  border: 1px solid transparent;
+  margin-bottom: 20px;
+  padding: 10px 35px 10px 15px;
+
+  &--error {
+    background-color: @state-error-bg-color;
+    border: 1px solid @state-error-border-color;
+    color: @state-error-font-color;
+
+    a {
+      color: @state-error-link-color;
+    }
+  }
+
+  &--warning {
+    background-color: @state-warning-bg-color;
+    border-color: @state-warning-border-color;
+    color: @state-warning-font-color;
+
+    a {
+      color: @state-warning-link-color;
+    }
+  }
+
+  &--success {
+    background-color: @state-success-bg-color;
+    border-color: @state-success-border-color;
+    color: @state-success-font-color;
+
+    a {
+      color: @state-success-link-color;
+    }
+  }
+
+  &--info {
+    background-color: @state-info-bg-color;
+    border-color: @state-info-border-color;
+    color: @state-info-font-color;
+
+    a {
+      color: @state-info-link-color;
+    }
+  }
+
+  .dismiss-flash {
+    position: absolute;
+    right: 10px;
+    top: 11px;
+
+    i {
+      font-size: @font-size + 2px;;
+    }
+  }
+
+  &--no-dismiss {
+    padding: 10px 15px;
+
+    .dismiss-flash {
+      display: none;
+    }
+  }
+
+  &--dismissing {
+    opacity: 0;
+    .transition(opacity 0.5s);
+  }
+}

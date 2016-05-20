@@ -1,7 +1,13 @@
 <?php
-$class = 'message';
-if (!empty($params['class'])) {
-    $class .= ' ' . $params['class'];
+/**
+ * @var string $message
+ * @var array $params
+ */
+$class = ['flash-message'];
+if (!empty($params['type'])) {
+    $class[] = 'flash-message--' . $params['type'];
 }
-?>
-<div class="<?= h($class) ?>"><?= h($message) ?></div>
+if (!empty($params['class'])) {
+    $class[] = $params['class'];
+}
+?><div class="<?= h(join(' ', $class)) ?>"><?= $message ?><a href="javascript:void(0)" class="dismiss-flash" title="<?= __('Dismiss this message.') ?>">&times;</a></div>
